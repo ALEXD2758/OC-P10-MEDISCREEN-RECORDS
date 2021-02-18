@@ -30,13 +30,14 @@ public class NoteController {
      * Get the ModelAndView note/list
      * Adds attribute "notes" to the model, containing all notes available in DB for that patient ID
      *
+     * @param patientId the Integer of the patient id chosen
      * @param model Model Interface, to add attributes to it
      * @return a string to the address "note/list", returning the associated view
      * with attribute
      */
-    @GetMapping("/note/list")
-    public String notesList(Model model, Integer patientId) {
-        model.addAttribute("notes", noteService.getAllNotes(patientId));
+    @GetMapping("/note/list/{patientId}")
+    public String notesList(@PathVariable("patientId") Integer patientId, Model model) {
+        model.addAttribute("notes", noteService.getAllNotesByPatientId(patientId));
         logger.info("GET /note/list : OK");
         return "note/list";
     }
@@ -46,21 +47,21 @@ public class NoteController {
      * with the associated data of the chosen ID
      * Add attribute patient to the model
      *
-     * @param id the int of the patient id chosen
+     * @param patientId the Integer of the patient id chosen
      * @param model the Model Interface, to add attributes to it
      * @return a string to the address "patient/update", returning the associated view
      * with attribute (if no Exception)
      */
-    @GetMapping("/note/add/{id}")
-    public String noteAdd(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) {
-        if (patientWebClientService.checkPatientIdExist(id) == false) {
+    @GetMapping("/note/add/{patientId}")
+    public String noteAdd(@PathVariable("patientId") Integer patientId, Model model, RedirectAttributes ra) {
+        if (patientWebClientService.checkPatientIdExist(patientId) == false) {
             ra.addFlashAttribute("ErrorPatientIdMessage", "Patient ID doesn't exist");
             logger.info("GET /note/add : Non existent id");
             return "redirect:/patient/list";
         }
         NoteModel newNoteModel = new NoteModel();
-        newNoteModel.setPatientId(id);
-        model.addAttribute("patient", newNoteModel);
+        newNoteModel.setPatientId(patientId);
+        model.addAttribute("note", newNoteModel);
         logger.info("GET /note/add : OK");
         return "note/add";
     }
@@ -71,13 +72,14 @@ public class NoteController {
      *
      * @param note the NoteModel with annotation @Valid (for the possible constraints)
      * @param result to represent binding results
+     * @param patientId the Integer of the patient id chosen
      * @param ra the RedirectAttributes to redirect attributes in redirect
      * @return if successful, a string to the address "patient/list", returning the associated view,
      * with attributes ; if not, get the "note/add" view
      */
-    @PostMapping("/note/add/{id}")
-    public String postNoteAdd(@PathVariable("id") Integer id,
-                                  @Valid @ModelAttribute("patient") NoteModel note,
+    @PostMapping("/note/add/{patientId}")
+    public String postNoteAdd(@PathVariable("patientId") Integer patientId,
+                                  @Valid @ModelAttribute("note") NoteModel note,
                             BindingResult result, RedirectAttributes ra) {
         if (!result.hasErrors()) {
             noteService.saveNote(note);

@@ -24,7 +24,7 @@ public class NoteService {
      *
      * @return list of NoteModel containing all note models
      */
-    public List<NoteModel> getAllNotes(int patientId) {
+    public List<NoteModel> getAllNotesByPatientId(int patientId) {
         return noteRep.findAllByPatientId(patientId);
     }
 

@@ -25,9 +25,9 @@ public class NoteModel {
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     private LocalDateTime creationDateTime;
 
-    @NotNull(message="Note cannot be empty")
-    @Field("note")
-    private String note;
+    @NotNull(message="Comment cannot be empty")
+    @Field("comment")
+    private String comment;
 
     public Integer getId() {
         return id;
@@ -53,11 +53,11 @@ public class NoteModel {
         this.creationDateTime = creationDateTime;
     }
 
-    public String getNote() {
-        return note;
+    public String getComment() {
+        return comment;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }
