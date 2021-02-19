@@ -28,7 +28,7 @@ public class PatientWebClientService {
         return BASE_URL + PATH_PATIENT_EXIST;
     }
 
-    public List<PatientModel> listPatients() {
+    public List<PatientModel> getListPatients() {
         Flux<PatientModel> getPatientList= WebClient.create()
                 .get()
                 .uri(getListPatientServiceUri())

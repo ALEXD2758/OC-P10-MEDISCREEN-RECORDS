@@ -39,17 +39,17 @@ public class NoteController {
     public String notesList(@PathVariable("patientId") Integer patientId, Model model) {
         model.addAttribute("notes", noteService.getAllNotesByPatientId(patientId));
         logger.info("GET /note/list : OK");
-        return "note/list";
+        return "note/list/{patientId}";
     }
 
     /**
-     * Get the view patient/update with the chosen patient in a model attribute
+     * Get the view note/add with the chosen patient in a model attribute
      * with the associated data of the chosen ID
-     * Add attribute patient to the model
+     * Add attribute note to the model
      *
      * @param patientId the Integer of the patient id chosen
      * @param model the Model Interface, to add attributes to it
-     * @return a string to the address "patient/update", returning the associated view
+     * @return a string to the view "note/add", returning the associated view
      * with attribute (if no Exception)
      */
     @GetMapping("/note/add/{patientId}")
@@ -77,17 +77,17 @@ public class NoteController {
      * @return if successful, a string to the address "patient/list", returning the associated view,
      * with attributes ; if not, get the "note/add" view
      */
-    @PostMapping("/note/add/{patientId}")
+    @PostMapping("/note/add/validate/{patientId}")
     public String postNoteAdd(@PathVariable("patientId") Integer patientId,
                                   @Valid @ModelAttribute("note") NoteModel note,
                             BindingResult result, RedirectAttributes ra) {
         if (!result.hasErrors()) {
             noteService.saveNote(note);
-            ra.addFlashAttribute("successUpdateMessage", "Your note was successfully added");
+            ra.addFlashAttribute("successSaveMessage", "Your note was successfully added");
             logger.info("POST /note/add : OK");
-            return "redirect:/patient/list";
+            return "redirect:/note/list/{patientId}";
         }
         logger.info("POST /note/add : NOK");
-        return "/note/add";
+        return "/note/add/{patientId}";
     }
 }

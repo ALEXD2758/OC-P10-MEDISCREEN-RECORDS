@@ -42,9 +42,9 @@ public class NoteService {
      * Save a new note in the DB
      *
      * @param note the NoteModel to save
-     * @return boolean, true if the note was saved, false if not saved
+     * @return NoteModel saved
      */
-    public void saveNote(NoteModel note) {
-        noteRep.save(note);
+    public NoteModel saveNote(NoteModel note) {
+        return noteRep.save(note);
     }
 }

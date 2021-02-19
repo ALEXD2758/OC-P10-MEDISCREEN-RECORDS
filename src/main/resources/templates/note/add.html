@@ -10,102 +10,38 @@
 <div class="container">
 
 	<div class="row">
-		<h2>Add New Patient</h2>
+		<h2>Add New Note for the Patient</h2>
 	</div>
 	 <p class="alert alert-danger" th:if="${!#strings.isEmpty(ErrorPatientExistentMessage)}" th:text="${ErrorPatientExistentMessage}"></p>
 
 	<div class="row">
-		<form action="#" th:action="@{/patient/add/validate}"  method="post" class="form-horizontal" style="width: 100%">
+		<form action="#" th:action="@{/note/add/validate/{patientId}(patientId=${note.patientId})}"  method="post" class="form-horizontal" style="width: 100%">
 			<div class="form-group">
-				<label for="givenName" class="col-sm-2 control-label">Given Name</label>
+				<label for="patientId" class="col-sm-2 control-label">Patient Id</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{patient.givenName}" id="givenName" placeholder="Given Name" class="col-4">
-							<p class="text-danger" th:if="${#fields.hasErrors('patient.givenName')}" th:errors="*{patient.givenName}"></p>
+					<input type="text" readonly="true" th:field="*{note.patientId}" id="patientId" placeholder="Patient Id" class="col-4">
+							<p class="text-danger" th:if="${#fields.hasErrors('note.patientId')}" th:errors="*{note.patientId}"></p>
                         </div>
                     </div>
+			<div class="form-group">
+				<label for="creationDateTime" class="col-sm-2 control-label">Creation Date & Time</label>
+				<div class="col-sm-10">
+					<input type="datetime-local" th:field="*{note.creationDateTime}" id="creationDateTime" placeholder="Creation Date & Time" class="col-4">
+					<p class="text-danger" th:if="${#fields.hasErrors('note.creationDateTime')}" th:errors="*{note.creationDateTime}"></p>
+				</div>
+			</div>
                     <div class="form-group">
-                        <label for="familyName" class="col-sm-2 control-label">Family Name</label>
+                        <label for="comment" class="col-sm-2 control-label">Comment</label>
                         <div class="col-sm-10">
-                            <input type="text" th:field="*{patient.familyName}" id="familyName" placeholder="Family Name" class="col-4">
-                        	<p class="text-danger" th:if="${#fields.hasErrors('patient.familyName')}" th:errors="*{patient.familyName}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="birthdate" class="col-sm-2 control-label">Birthdate</label>
-				<div class="col-sm-10">
-					<input type="date" th:field="*{patient.birthdate}" id="birthdate" placeholder="birthdate" class="col-4">
-						<p class="text-danger" th:if="${#fields.hasErrors('patient.birthdate')}" th:errors="*{patient.birthdate}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-10">
-						<select name="gender">
-                            <option th:each="gender : ${T(com.mediscreen.records.repository.GenderEnum).values()}"
-                                    th:value="${gender}" th:text="${gender.displayValue}"></option>
-					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="street" class="col-sm-2 control-label">Street</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{patient.address.street}" id="street" placeholder="street" class="col-4">
-						<p class="text-danger" th:if="${#fields.hasErrors('patient.address.street')}" th:errors="*{patient.address.street}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="city" class="col-sm-2 control-label">City</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{patient.address.city}" id="city" placeholder="city" class="col-4">
-						<p class="text-danger" th:if="${#fields.hasErrors('patient.address.city')}" th:errors="*{patient.address.city}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="postcode" class="col-sm-2 control-label">Postcode</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{patient.address.postcode}" id="postcode" placeholder="postcode" class="col-4">
-						<p class="text-danger" th:if="${#fields.hasErrors('patient.address.postcode')}" th:errors="*{patient.address.postcode}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="district" class="col-sm-2 control-label">District</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{patient.address.district}" id="district" placeholder="district" class="col-4">
-						<p class="text-danger" th:if="${#fields.hasErrors('patient.address.district')}" th:errors="*{patient.address.district}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="state" class="col-sm-2 control-label">State</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{patient.address.state}" id="state" placeholder="state" class="col-4">
-						<p class="text-danger" th:if="${#fields.hasErrors('patient.address.state')}" th:errors="*{patient.address.state}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="country" class="col-sm-2 control-label">Country</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{patient.address.country}" id="country" placeholder="country" class="col-4">
-						<p class="text-danger" th:if="${#fields.hasErrors('patient.address.country')}" th:errors="*{patient.address.country}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="emailAddress" class="col-sm-2 control-label">Email Address</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{patient.emailAddress}" id="emailAddress" placeholder="emailAddress" class="col-4">
-						<p class="text-danger" th:if="${#fields.hasErrors('patient.emailAddress')}" th:errors="*{patient.emailAddress}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="phoneNumber" class="col-sm-2 control-label">Phone Number</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{patient.phoneNumber}" id="phoneNumber" placeholder="phoneNumber" class="col-4">
-						<p class="text-danger" th:if="${#fields.hasErrors('patient.phoneNumber')}" th:errors="*{patient.phoneNumber}"></p>
+                            <input type="text" th:field="*{note.comment}" id="comment" placeholder="Comment" class="col-4">
+                        	<p class="text-danger" th:if="${#fields.hasErrors('note.comment')}" th:errors="*{note.comment}"></p>
 				</div>
 			</div>
 
 			<div class="form-group">
 				<div class="col-sm-12">
 					<a class="btn btn-danger btn-sm" href="/patient/list">Cancel</a>
-					<input class="btn btn-primary btn-sm" type="submit" value="Add patient">
+					<input class="btn btn-primary btn-sm" type="submit" value="Add note">
 				</div>
 			</div>
 

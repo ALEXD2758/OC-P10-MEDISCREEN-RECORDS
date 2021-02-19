@@ -1,11 +1,11 @@
-/*package com.mediscreen.records.services;
+package com.mediscreen.records.services;
 
 import com.mediscreen.records.model.AddressModel;
 import com.mediscreen.records.model.NoteModel;
-import com.mediscreen.records.repository.AddressRepository;
-import com.mediscreen.records.repository.GenderEnum;
-import com.mediscreen.records.repository.PatientRepository;
+import com.mediscreen.records.repository.NoteRepository;
+import com.mediscreen.records.service.NoteService;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,127 +24,82 @@ import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class PatientUTests {
+public class NoteServiceUTests {
 
     @Autowired
     private DataSource dataSource;
 
     @Autowired
-    private PatientRepository patientRepository;
+    private NoteService noteService;
 
     @Autowired
-    private AddressRepository addressRepository;
+    private NoteRepository noteRepository;
 
-    public NoteModel patientModel1() {
-        AddressModel addressModel1 = new AddressModel();
-        addressModel1.setStreet("StreetTest1");
-        addressModel1.setCity("CityTest1");
-        addressModel1.setPostcode("112345");
-        addressModel1.setDistrict("DistrictTest1");
-        addressModel1.setState("StateTest1");
-        addressModel1.setCountry("CountryTest1");
+    public NoteModel noteModel1() {
+        LocalDateTime date = new LocalDateTime(2021/01/01);
 
-        LocalDate date = new LocalDate(2020, 01, 01);
-        NoteModel patientModel1 = new NoteModel();
-        patientModel1.setGivenName("John");
-        patientModel1.setFamilyName("Boyd");
-        patientModel1.setBirthdate(date);
-        patientModel1.setGender(GenderEnum.MALE);
-        patientModel1.setAddress(addressModel1);
-        patientModel1.setEmailAddress("EmailTest1@email.com");
-        patientModel1.setPhoneNumber("004678925899");
-        return patientModel1;
+        NoteModel noteModel1 = new NoteModel();
+        noteModel1.setPatientId(1);
+        noteModel1.setCreationDateTime(date);
+        noteModel1.setComment("Diabete Type A");
+        return noteModel1;
     }
 
-    public NoteModel patientModel2() {
-        AddressModel addressModel2 = new AddressModel();
-        addressModel2.setStreet("StreetTest2");
-        addressModel2.setCity("CityTest2");
-        addressModel2.setPostcode("212345");
-        addressModel2.setDistrict("DistrictTest2");
-        addressModel2.setState("StateTest2");
-        addressModel2.setCountry("CountryTest2");
+    public NoteModel noteModel2() {
+        LocalDateTime date = new LocalDateTime(2021/02/02);
 
-        LocalDate date = new LocalDate(2014, 01,01);
-        NoteModel patientModel2 = new NoteModel();
-        patientModel2.setGivenName("Roger");
-        patientModel2.setFamilyName("Patterson");
-        patientModel2.setBirthdate(date);
-        patientModel2.setGender(GenderEnum.MALE);
-        patientModel2.setAddress(addressModel2);
-        patientModel2.setEmailAddress("EmailTest2@email.com");
-        patientModel2.setPhoneNumber("004678925899");
-        return patientModel2;
+        NoteModel noteModel2 = new NoteModel();
+        noteModel2.setPatientId(2);
+        noteModel2.setCreationDateTime(date);
+        noteModel2.setComment("Diabete Type B");
+        return noteModel2;
+    }
+
+    public NoteModel noteModel3() {
+        LocalDateTime date = new LocalDateTime(2021/02/04);
+
+        NoteModel noteModel3 = new NoteModel();
+        noteModel3.setPatientId(1);
+        noteModel3.setCreationDateTime(date);
+        noteModel3.setComment("Diabete Type C");
+        return noteModel3;
+    }
+
+    public NoteModel noteModel4() {
+        LocalDateTime date = new LocalDateTime(2021/02/05);
+
+        NoteModel noteModel4 = new NoteModel();
+        noteModel4.setPatientId(2);
+        noteModel4.setCreationDateTime(date);
+        noteModel4.setComment("Diabete Type D");
+        return noteModel4;
     }
 
     @Before
-    public void savePatientsToDbBeforeTests() throws SQLException {
-        ScriptUtils.executeSqlScript(dataSource.getConnection(), new FileSystemResource("src/test/resources/db_test_scriptV2.sql"));
-        patientRepository.deleteAll();
-        patientRepository.save(patientModel1());
-        patientRepository.save(patientModel2());
+    public void saveNotesToDbBeforeTests() throws SQLException {
+     //   ScriptUtils.executeSqlScript(dataSource.getConnection(), new FileSystemResource("src/test/resources" +
+     //           "/db_test_scriptV2.sql"));
+        noteService.saveNote(noteModel1());
+        noteService.saveNote(noteModel2());
+        noteService.saveNote(noteModel3());
+        noteService.saveNote(noteModel4());
     }
 
     @After
-    public void deleteAllPatientsAfterTests() {
-        patientRepository.deleteAll();
+    public void deleteAllNotesAfterTests() {
+        noteRepository.deleteAll();
     }
 
     @Test
-    public void getAllPatientsShouldReturnAllPatients() {
+    public void getAllNotesByPatientIdShouldReturnAllPatientNotes() {
         //ARRANGE
+        int patientId = 1;
         //ACT
-        List<NoteModel> listPatient = patientRepository.findAll();
+        List<NoteModel> listNotes = noteService.getAllNotesByPatientId(1);
         //ASSERT
-        Assert.assertTrue(listPatient.size() == 2);
-        Assert.assertTrue(listPatient.get(0).getGivenName().equals("John"));
-        Assert.assertTrue(listPatient.get(0).getAddress().getStreet().equals("StreetTest1"));
-    }
-
-    @Test
-    public void getAllPatientsByAddressShouldReturnPatientsAtThatAddress() {
-        //ARRANGE
-        String street = "StreetTest2";
-        String city = "CityTest2";
-        String country = "CountryTest2";
-
-        //ACT
-        List<NoteModel> listPatient =
-                patientRepository.findAllByAddressStreetAndAddressCityAndAddressCountry(street, city, country);
-
-        //ASSERT
-        Assert.assertTrue(listPatient.size() == 1);
-        Assert.assertTrue(listPatient.get(0).getGivenName().equals("Roger"));
-        Assert.assertTrue(listPatient.get(0).getAddress().getStreet().equals("StreetTest2"));
-    }
-
-    @Test
-    public void getPatientByIdShouldReturnPatientWithThatId() {
-        //ARRANGE
-        int id = 1;
-
-        //ACT
-        NoteModel patient = patientRepository.findById(id);
-
-        //ASSERT
-        Assert.assertTrue(patient.getGivenName().equals("John"));
-        Assert.assertTrue(patient.getGender().equals(GenderEnum.MALE));
-        Assert.assertTrue(patient.getAddress().getStreet().equals("StreetTest1"));
-    }
-
-    @Test
-    public void checkExistentPatientByGivenFamilyNamesBirthDateShouldReturnTrue() {
-        //ARRANGE
-        String givenName = "Roger";
-        String familyName = "Patterson";
-        LocalDate birthdate = new LocalDate(2014, 01,01);
-
-        //ACT
-        boolean existentPatient = patientRepository.existsByGivenNameAndFamilyNameAndBirthdate(givenName, familyName,
-                birthdate);
-
-        //ASSERT
-        Assert.assertEquals(true, existentPatient);
+        Assert.assertTrue(listNotes.size() == 2);
+        Assert.assertTrue(listNotes.get(0).getComment().equals("Diabete Type A"));
+        Assert.assertTrue(listNotes.get(1).getComment().equals("Diabete Type C"));
     }
 
     @Test
@@ -153,90 +108,27 @@ public class PatientUTests {
         int id = 1;
 
         //ACT
-        boolean existentPatientById = patientRepository.existsById(id);
+        boolean existentPatientById = noteService.checkIdExists(id);
 
         //ASSERT
         Assert.assertEquals(true, existentPatientById);
     }
 
     @Test
-    public void deletePatientByIdShouldDeletePatient() {
-        //ARRANGE
-        int id = 1;
-
-        //ACT
-        boolean existentPatientById = patientRepository.existsById(id);
-        patientRepository.deleteById(id);
-        Optional<NoteModel> optionalPatientModel = Optional.ofNullable(patientRepository.findById(id));
-
-        //ASSERT
-        Assert.assertFalse(optionalPatientModel.isPresent());
-    }
-
-    @Test
     public void savePatientShouldSaveANewPatient() {
         //ARRANGE
-        AddressModel addressModel3 = new AddressModel();
-        addressModel3.setId(3);
-        addressModel3.setStreet("StreetTest3");
-        addressModel3.setCity("CityTest3");
-        addressModel3.setPostcode("2123445");
-        addressModel3.setDistrict("DistrictTest3");
-        addressModel3.setState("StateTest3");
-        addressModel3.setCountry("CountryTest3");
+        LocalDateTime date = new LocalDateTime(2021/01/06);
 
-        LocalDate date = new LocalDate(2018,01,01);
-        NoteModel patientModel3 = new NoteModel();
-        patientModel3.setGivenName("Test");
-        patientModel3.setFamilyName("TestName");
-        patientModel3.setBirthdate(date);
-        patientModel3.setGender(GenderEnum.FEMALE);
-        patientModel3.setEmailAddress("EmailTest3@email.com");
-        patientModel3.setPhoneNumber("004678925899");
-        patientModel3.setAddress(addressModel3);
-
-
-        AddressModel address = new AddressModel();
-        address.setStreet(patientModel3.getAddress().getStreet());
-        address.setCity(patientModel3.getAddress().getCity());
-        address.setPostcode(patientModel3.getAddress().getPostcode());
-        address.setDistrict(patientModel3.getAddress().getDistrict());
-        address.setState(patientModel3.getAddress().getState());
-        address.setCountry(patientModel3.getAddress().getCountry());
-        patientModel3.setAddress(address);
-
+        NoteModel noteModel5 = new NoteModel();
+        noteModel5.setPatientId(5);
+        noteModel5.setCreationDateTime(date);
+        noteModel5.setComment("Diabete");
         //ACT
-        NoteModel patientToSave = patientRepository.saveAndFlush(patientModel3);
-        patientRepository.flush();
+        NoteModel noteToSave = noteService.saveNote(noteModel5);
 
         //ASSERT
-        Assert.assertNotNull(patientToSave.getId());
-        Assert.assertNotNull(patientToSave.getAddress().getStreet());
-        Assert.assertEquals("Test", patientToSave.getGivenName());
-        Assert.assertEquals("StreetTest3", patientToSave.getAddress().getStreet());
-    }
-
-    @Test
-    public void updatePatientShouldUpdatePatient() {
-        //ARRANGE
-        AddressModel addressToUpdate = addressRepository.findById(2);
-        addressToUpdate.setStreet("Street4");
-        addressToUpdate.setCity("CityTest4");
-        addressToUpdate.setPostcode("1234");
-        addressToUpdate.setDistrict("District4");
-        addressToUpdate.setState("State4");
-        addressToUpdate.setCountry("Country4");
-
-        //ACT
-        NoteModel patientModel3 = patientRepository.findById(2);
-        patientModel3.setAddress(addressToUpdate);
-        patientModel3.setFamilyName("UpdatedName");
-        NoteModel patientToUpdate = patientRepository.save(patientModel3);
-
-        //ASSERT
-        Assert.assertEquals("CityTest4", patientToUpdate.getAddress().getCity());
-        Assert.assertEquals("UpdatedName", patientToUpdate.getFamilyName());
-        Assert.assertEquals("1234", patientToUpdate.getAddress().getPostcode());
+        Assert.assertNotNull(noteToSave.getId());
+        Assert.assertNotNull(noteToSave.getCreationDateTime());
+        Assert.assertEquals("Diabete", noteToSave.getComment());
     }
 }
- */
