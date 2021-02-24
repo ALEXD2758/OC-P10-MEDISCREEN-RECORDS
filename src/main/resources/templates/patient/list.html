@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"/>
+	<title>Patient View List</title>
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+</head>
+<body style="
+    width: 1650px;
+">
+<div class="container" style=" margin-left: 35px;">
+	<div class="row" style=" width: 1880px;">
+
+		<div class="col-6">
+			<h2>Patient View List</h2>
+		</div>
+		<div class="col-6 text-right">
+		<!--	<a href="/">Going to Home view now!</a> -->
+		</div>
+	</div>
+	<p class="alert alert-danger" th:if="${!#strings.isEmpty(ErrorPatientIdMessage)}" th:text="${ErrorPatientIdMessage}"></p>
+	<p class="alert alert-danger" th:if="${!#strings.isEmpty(errorDeleteMessage)}" th:text="${errorDeleteMessage}"></p>
+	<p class="alert alert-success" th:if="${!#strings.isEmpty(successDeleteMessage)}" th:text="${successDeleteMessage}"></p>
+	<p class="alert alert-success" th:if="${!#strings.isEmpty(successUpdateMessage)}" th:text="${successUpdateMessage}"></p>
+	<p class="alert alert-danger" th:if="${!#strings.isEmpty(errorSaveMessage)}" th:text="${errorSaveMessage}"></p>
+	<p class="alert alert-success" th:if="${!#strings.isEmpty(successSaveMessage)}" th:text="${successSaveMessage}"></p>
+	<div class="row">
+		<table class="table table-bordered" style="width: 1872px;">
+			<thead>
+			<tr>
+				<th>Id</th>
+				<th>Given Name</th>
+				<th>Family Name</th>
+				<th>Birthdate</th>
+				<th>Gender</th>
+				<th>Street</th>
+				<th>City</th>
+				<th>Action</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr th:each="patient : ${patients}">
+				<td style="width: 8% "><span th:text="${patient.id}"> N/A </span></td>
+				<td style="width: 17% "><span th:text="${patient.givenName}"> N/A </span></td>
+				<td style="width: 15% "><span th:text="${patient.familyName}"> N/A </span></td>
+				<td style="width: 10% "><span th:text="${patient.birthdate}"> N/A </span></td>
+				<td style="width: 5% "><span th:text="${patient.gender}"> N/A </span></td>
+				<td style="width: 15% "><span th:text="${patient.address.street}"> N/A </span></td>
+				<td style="width: 15% "><span th:text="${patient.address.city}"> N/A </span></td>
+				<td style="width: 15%" class="text-center">
+					<a th:href="@{/note/add/{patientId}(patientId=${patient.id})}">Add Note</a>
+					<a th:href="@{/note/list/{patientId}(patientId=${patient.id})}")>History</a>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"/>
+	<title>Patient View List</title>
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+</head>
+<body style="
+    width: 1650px;
+">
+<div class="container" style=" margin-left: 35px;">
+	<div class="row" style=" width: 1880px;">
+
+		<div class="col-6">
+			<h2>Patient-records history view</h2>
+		</div>
+		<div class="col-6 text-right">
+			<a href="/">Going to Home view now!</a>
+		</div>
+	</div>
+	<p class="alert alert-danger" th:if="${!#strings.isEmpty(ErrorPatientIdMessage)}" th:text="${ErrorPatientIdMessage}"></p>
+	<p class="alert alert-danger" th:if="${!#strings.isEmpty(errorDeleteMessage)}" th:text="${errorDeleteMessage}"></p>
+	<p class="alert alert-success" th:if="${!#strings.isEmpty(successDeleteMessage)}" th:text="${successDeleteMessage}"></p>
+	<p class="alert alert-success" th:if="${!#strings.isEmpty(successUpdateMessage)}" th:text="${successUpdateMessage}"></p>
+	<p class="alert alert-danger" th:if="${!#strings.isEmpty(errorSaveMessage)}" th:text="${errorSaveMessage}"></p>
+	<p class="alert alert-success" th:if="${!#strings.isEmpty(successSaveMessage)}" th:text="${successSaveMessage}"></p>
+	<div class="row">
+		<a th:href="@{'/note/add/' + ${notePatientId}}" class="btn btn-primary btn-sm">Add New</a>
+
+		<table class="table table-bordered" style="width: 1872px;">
+			<thead>
+			<tr>
+				<th>Id</th>
+				<th>Creation Date & Time</th>
+				<th>Note</th>
+				<th>Action</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr th:each="note : ${notes}">
+				<td style="width: 10% "><span th:text="${note.id}"> N/A </span></td>
+				<td style="width: 10% "><span th:text="${#temporals.format(note.creationDateTime, 'yyyy-MM-dd HH:mm')}"> N/A </span></td>
+				<td style="word-break: break-all; "><span th:text="${note.comment}"> N/A </span></td>
+				<td style="width: 10%" class="text-center">
+					<form action="#" th:action="@{/note/delete/{id}(id=${note.id})}" onclick="return confirm('Are you sure you want to delete this note?')")
+						  th:method="delete" >
+						<button type="submit"  class="btn btn-primary btn-sm">
+							Delete
+						</button>
+					</form>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+</body>
+</html>

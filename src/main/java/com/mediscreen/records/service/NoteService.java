@@ -24,17 +24,17 @@ public class NoteService {
      *
      * @return list of NoteModel containing all note models
      */
-    public List<NoteModel> getAllNotes(int patientId) {
+    public List<NoteModel> getAllNotesByPatientId(int patientId) {
         return noteRep.findAllByPatientId(patientId);
     }
 
     /**
-     * Check if a patient Id exists
-     * @param patientId the patient ID
-     * @return true if patient ID already exists, false if patient ID doesn't exist
+     * Check if a note Id exists
+     * @param id the note ID
+     * @return true if note ID already exists, false if note ID doesn't exist
      */
-    public boolean checkIdExists(int patientId) {
-        return noteRep.existsByPatientId(patientId);
+    public boolean checkIdExists(String id) {
+        return noteRep.existsById(id);
     }
 
     /**
@@ -42,9 +42,24 @@ public class NoteService {
      * Save a new note in the DB
      *
      * @param note the NoteModel to save
-     * @return boolean, true if the note was saved, false if not saved
+     * @return NoteModel saved
      */
-    public void saveNote(NoteModel note) {
-        noteRep.save(note);
+    public NoteModel saveNote(NoteModel note) {
+        return noteRep.save(note);
+    }
+
+    /**
+     * Delete all notes from all patients
+     */
+    public void deleteAllNotes() {
+        noteRep.deleteAll();
+    }
+
+    /**
+     * Delete a specific note by ID, from a specific patient
+     * @param id int of the note id
+     */
+    public void deleteNotePatient(String id) {
+        noteRep.deleteById(id);
     }
 }

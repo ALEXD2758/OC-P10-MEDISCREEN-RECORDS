@@ -26,7 +26,7 @@ public class PatientController {
      */
     @GetMapping("/patient/list")
     public String patientList(Model model) {
-        model.addAttribute("patients", patientWebClientService.listPatients());
+        model.addAttribute("patients", patientWebClientService.getListPatients());
         logger.info("GET /patient/list : OK");
         return "patient/list";
     }

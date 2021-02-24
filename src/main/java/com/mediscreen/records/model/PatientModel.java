@@ -1,15 +1,7 @@
 package com.mediscreen.records.model;
 
-import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-
-@Entity
-@Table(name = "patients")
 public class PatientModel {
 
     private Integer id;
@@ -18,8 +10,6 @@ public class PatientModel {
 
     private String familyName;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate birthdate;
 
     private String gender;
