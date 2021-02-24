@@ -1,10 +1,5 @@
 package com.mediscreen.records.model;
 
-import javax.persistence.*;
-import javax.transaction.Transactional;
-import javax.validation.constraints.NotEmpty;
-
-@Entity
 public class AddressModel {
 
     private Integer id;

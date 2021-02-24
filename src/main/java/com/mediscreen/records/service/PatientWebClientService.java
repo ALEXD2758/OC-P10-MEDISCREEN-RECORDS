@@ -15,19 +15,26 @@ public class PatientWebClientService {
     private final String BASE_URL = "http://localhost:8081";
     // Declare the path for patient list
     private final String PATH_PATIENT_LIST = "/getPatientList";
-    // Declare the path for
+    // Declare the path for checking a patient ID
     private final String PATH_PATIENT_EXIST = "/checkPatientId";
+    //Declare the AttractionId name to use in the request of the Rest Template Web Client
+    private final String USER_ID = "?patientId=";
 
     //Define the patients service URI (for patient list)
     private final String getListPatientServiceUri() {
         return BASE_URL + PATH_PATIENT_LIST;
     }
 
-    //Define the patients service URI
+    //Define the patients service URI (for checkPatientIdExist)
     private final String getCheckPatientIdServiceUri() {
-        return BASE_URL + PATH_PATIENT_EXIST;
+        return BASE_URL + PATH_PATIENT_EXIST + USER_ID;
     }
 
+    /**
+     * Web Client request to server-service "patients" for getting a list of all patients
+     *
+     * @return PatientModel list of all patients
+     */
     public List<PatientModel> getListPatients() {
         Flux<PatientModel> getPatientList= WebClient.create()
                 .get()
@@ -39,7 +46,7 @@ public class PatientWebClientService {
     }
 
     /**
-     * Web Client request to server-service "patients"
+     * Web Client request to server-service "patients" to check if a patient Id exists
      *
      * @param patientId int
      * @return boolean of patient id exists' query
@@ -47,7 +54,7 @@ public class PatientWebClientService {
     public boolean checkPatientIdExist(int patientId) {
         Mono<Boolean> getPatientList= WebClient.create()
                 .get()
-                .uri(getCheckPatientIdServiceUri())
+                .uri(getCheckPatientIdServiceUri() + patientId)
                 .retrieve()
                 .bodyToMono(Boolean.class);
         boolean patientList = getPatientList.block();

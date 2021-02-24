@@ -1,11 +1,9 @@
 package com.mediscreen.records.services;
 
-import com.mediscreen.records.model.AddressModel;
 import com.mediscreen.records.model.NoteModel;
 import com.mediscreen.records.repository.NoteRepository;
 import com.mediscreen.records.service.NoteService;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,12 +11,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,18 +21,16 @@ import java.util.Optional;
 public class NoteServiceUTests {
 
     @Autowired
-    private DataSource dataSource;
-
-    @Autowired
     private NoteService noteService;
 
     @Autowired
     private NoteRepository noteRepository;
 
     public NoteModel noteModel1() {
-        LocalDateTime date = new LocalDateTime(2021/01/01);
+        LocalDateTime date = LocalDateTime.of(2021,01,01,13,45,30);
 
         NoteModel noteModel1 = new NoteModel();
+        noteModel1.setId("1245567");
         noteModel1.setPatientId(1);
         noteModel1.setCreationDateTime(date);
         noteModel1.setComment("Diabete Type A");
@@ -46,9 +38,10 @@ public class NoteServiceUTests {
     }
 
     public NoteModel noteModel2() {
-        LocalDateTime date = new LocalDateTime(2021/02/02);
+        LocalDateTime date = LocalDateTime.of(2021,02,02,13,45,30);
 
         NoteModel noteModel2 = new NoteModel();
+        noteModel2.setId("1245568");
         noteModel2.setPatientId(2);
         noteModel2.setCreationDateTime(date);
         noteModel2.setComment("Diabete Type B");
@@ -56,9 +49,10 @@ public class NoteServiceUTests {
     }
 
     public NoteModel noteModel3() {
-        LocalDateTime date = new LocalDateTime(2021/02/04);
+        LocalDateTime date = LocalDateTime.of(2021,02,04,13,45,30);
 
         NoteModel noteModel3 = new NoteModel();
+        noteModel3.setId("1245569");
         noteModel3.setPatientId(1);
         noteModel3.setCreationDateTime(date);
         noteModel3.setComment("Diabete Type C");
@@ -66,9 +60,10 @@ public class NoteServiceUTests {
     }
 
     public NoteModel noteModel4() {
-        LocalDateTime date = new LocalDateTime(2021/02/05);
+        LocalDateTime date = LocalDateTime.of(2021,02,05,13,45,30);
 
         NoteModel noteModel4 = new NoteModel();
+        noteModel4.setId("1245577");
         noteModel4.setPatientId(2);
         noteModel4.setCreationDateTime(date);
         noteModel4.setComment("Diabete Type D");
@@ -76,7 +71,7 @@ public class NoteServiceUTests {
     }
 
     @Before
-    public void saveNotesToDbBeforeTests() throws SQLException {
+    public void saveNotesToDbBeforeTests() {
      //   ScriptUtils.executeSqlScript(dataSource.getConnection(), new FileSystemResource("src/test/resources" +
      //           "/db_test_scriptV2.sql"));
         noteService.saveNote(noteModel1());
@@ -87,7 +82,7 @@ public class NoteServiceUTests {
 
     @After
     public void deleteAllNotesAfterTests() {
-        noteRepository.deleteAll();
+        noteService.deleteAllNotes();
     }
 
     @Test
@@ -103,9 +98,9 @@ public class NoteServiceUTests {
     }
 
     @Test
-    public void checkExistentPatientByIdShouldReturnTrue() {
+    public void checkExistentNoteByIdShouldReturnTrue() {
         //ARRANGE
-        int id = 1;
+        String id = "1245567";
 
         //ACT
         boolean existentPatientById = noteService.checkIdExists(id);
@@ -117,7 +112,7 @@ public class NoteServiceUTests {
     @Test
     public void savePatientShouldSaveANewPatient() {
         //ARRANGE
-        LocalDateTime date = new LocalDateTime(2021/01/06);
+        LocalDateTime date = LocalDateTime.of(2021,01,06,13,45,30);
 
         NoteModel noteModel5 = new NoteModel();
         noteModel5.setPatientId(5);
@@ -130,5 +125,18 @@ public class NoteServiceUTests {
         Assert.assertNotNull(noteToSave.getId());
         Assert.assertNotNull(noteToSave.getCreationDateTime());
         Assert.assertEquals("Diabete", noteToSave.getComment());
+    }
+
+    @Test
+    public void deleteNotePatientByIdShouldAssertFalseWhenCheckIdExistsIsInvoked() {
+        //ARRANGE
+        String id = "1245567";
+
+        //ACT
+        noteService.deleteNotePatient(id);
+        boolean existentPatientById = noteService.checkIdExists(id);
+
+        //ASSERT
+        Assert.assertEquals(false, existentPatientById);
     }
 }

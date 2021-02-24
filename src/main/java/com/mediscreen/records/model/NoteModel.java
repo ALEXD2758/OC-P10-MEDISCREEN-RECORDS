@@ -1,39 +1,34 @@
 package com.mediscreen.records.model;
 
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDateTime;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.format.annotation.DateTimeFormat;
+import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
-
-@Entity
 @Document(collection="notes")
 public class NoteModel {
 
     @Id
-    private Integer id;
+    private String id;
 
     @Field("patientId")
     private Integer patientId;
 
     @Field("creationDateTime")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     private LocalDateTime creationDateTime;
 
-    @NotNull(message="Comment cannot be empty")
+    @NotEmpty(message="Comment cannot be empty")
     @Field("comment")
     private String comment;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

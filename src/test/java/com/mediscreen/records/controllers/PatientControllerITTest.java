@@ -100,12 +100,12 @@ public class PatientControllerITTest {
         //2. Act
         doReturn(patientList)
                 .when(patientWebClientService)
-                .getlistPatients();
+                .getListPatients();
 
         mockMvc.perform(get("/patient/list"))
          //3. Assert
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/patient/list"))
+                .andExpect(view().name("patient/list"))
                 .andExpect(model().attributeExists("patients"))
                 .andReturn();
 

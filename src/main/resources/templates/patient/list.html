@@ -49,8 +49,8 @@
 				<td style="width: 15% "><span th:text="${patient.address.street}"> N/A </span></td>
 				<td style="width: 15% "><span th:text="${patient.address.city}"> N/A </span></td>
 				<td style="width: 15%" class="text-center">
-					<a th:href="@{/note/add/{patientId}(id=${patient.id})}">Add Note</a>&nbsp;|&nbsp;
-					<a th:href="@{/note/list/{patientId}(id=${patient.id})}")>History</a>
+					<a th:href="@{/note/add/{patientId}(patientId=${patient.id})}">Add Note</a>
+					<a th:href="@{/note/list/{patientId}(patientId=${patient.id})}")>History</a>
 				</td>
 			</tr>
 			</tbody>

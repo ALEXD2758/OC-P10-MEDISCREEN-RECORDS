@@ -23,17 +23,10 @@
 							<p class="text-danger" th:if="${#fields.hasErrors('note.patientId')}" th:errors="*{note.patientId}"></p>
                         </div>
                     </div>
-			<div class="form-group">
-				<label for="creationDateTime" class="col-sm-2 control-label">Creation Date & Time</label>
-				<div class="col-sm-10">
-					<input type="datetime-local" th:field="*{note.creationDateTime}" id="creationDateTime" placeholder="Creation Date & Time" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('note.creationDateTime')}" th:errors="*{note.creationDateTime}"></p>
-				</div>
-			</div>
                     <div class="form-group">
                         <label for="comment" class="col-sm-2 control-label">Comment</label>
                         <div class="col-sm-10">
-                            <input type="text" th:field="*{note.comment}" id="comment" placeholder="Comment" class="col-4">
+							<textarea type="text" th:field="*{note.comment}" id="comment" placeholder="Comment" class="col-4"></textarea>
                         	<p class="text-danger" th:if="${#fields.hasErrors('note.comment')}" th:errors="*{note.comment}"></p>
 				</div>
 			</div>
