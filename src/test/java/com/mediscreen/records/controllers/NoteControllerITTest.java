@@ -126,6 +126,11 @@ public class NoteControllerITTest {
         notesList.add(noteModel3());
 
         //2. Act
+
+        doReturn(true)
+                .when(patientWebClientService)
+                .checkPatientIdExist(1);
+
         doReturn(notesList)
                 .when(noteService)
                 .getAllNotesByPatientId(1);
@@ -183,10 +188,14 @@ public class NoteControllerITTest {
     }
 
     @Test
-    public void postRequestPatientPostUpdateWithExistentIdShouldReturnSuccess() throws Exception {
+    public void postRequestPostNoteAddWithExistentIdShouldReturnSuccess() throws Exception {
         //1. Setup
         noteModel1().setCreationDateTime(LocalDateTime.now());
         //2. Act
+        doReturn(true)
+                .when(patientWebClientService)
+                .checkPatientIdExist(1);
+
         doReturn(noteModel1())
                 .when(noteService)
                 .saveNote(noteModel1());
@@ -205,10 +214,14 @@ public class NoteControllerITTest {
     }
 
     @Test
-    public void postRequestPatientPostUpdateWithMissingCommentShouldReturnNoteAddView() throws Exception {
+    public void postRequestPostNoteAddWithMissingCommentShouldReturnNoteAddView() throws Exception {
         //1. Arrange
         noteModel1().setComment("");
         //2. Act
+        doReturn(true)
+                .when(patientWebClientService)
+                .checkPatientIdExist(1);
+
         doReturn(noteModel1())
                 .when(noteService)
                 .saveNote(noteModel1());

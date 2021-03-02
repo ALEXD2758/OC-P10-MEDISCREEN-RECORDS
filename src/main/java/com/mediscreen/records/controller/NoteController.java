@@ -47,7 +47,12 @@ public class NoteController {
      * with attribute
      */
     @GetMapping("/note/list/{patientId}")
-    public String notesList(@PathVariable("patientId") int patientId, Model model) {
+    public String notesList(@PathVariable("patientId") int patientId, Model model, RedirectAttributes ra) {
+        if (patientWebClientService.checkPatientIdExist(patientId) == false) {
+            ra.addFlashAttribute("ErrorPatientIdMessage", "Patient ID doesn't exist");
+            logger.info("GET /note/add : Non existent id");
+            return "redirect:/patient/list";
+        }
         model.addAttribute("notes", noteService.getAllNotesByPatientId(patientId));
         model.addAttribute("notePatientId", patientId);
         logger.info("GET /note/list : OK");
@@ -96,6 +101,11 @@ public class NoteController {
     public String postNoteAdd(@PathVariable("patientId") int patientId,
                                   @Valid @ModelAttribute("note") final NoteModel note,
                             final BindingResult result, final RedirectAttributes ra) {
+        if (patientWebClientService.checkPatientIdExist(patientId) == false) {
+            ra.addFlashAttribute("ErrorPatientIdMessage", "Patient ID doesn't exist");
+            logger.info("GET /note/add : Non existent id");
+            return "redirect:/patient/list";
+        }
         if (!result.hasErrors()) {
             note.setCreationDateTime(LocalDateTime.now());
             noteService.saveNote(note);
