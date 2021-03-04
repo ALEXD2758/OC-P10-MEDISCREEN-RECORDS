@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 /*
-This Repository Interface extends the MongoRepository to access the MongoDB "records"
+This Repository Interface extends the MongoRepository to access the MongoDB collection "mediscreen"
  */
 public interface NoteRepository extends MongoRepository<NoteModel, Integer> {
 

@@ -11,8 +11,10 @@ import java.util.List;
 @Service
 public class PatientWebClientService {
 
-    // Declare the base url
-    private final String BASE_URL = "http://localhost:8081";
+    // Declare the base url (to use with Docker)
+    private final String BASE_URL = "http://patients:8081";
+    // Declare the path for patient list (to use with localhost)
+    private final String BASE_URL_LOCALHOST = "http://localhost:8081";
     // Declare the path for patient list
     private final String PATH_PATIENT_LIST = "/getPatientList";
     // Declare the path for checking a patient ID

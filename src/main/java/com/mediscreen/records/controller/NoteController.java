@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 public class NoteController {
@@ -26,8 +27,19 @@ public class NoteController {
     @Autowired
     PatientWebClientService patientWebClientService;
 
+
     /**
-     * DELETE request for deleting all notes for all patients
+     * HTTP GET request for deleting all notes for all patients
+     *
+     */
+    @GetMapping("/getNoteList")
+    public @ResponseBody List<NoteModel> getNoteList(Integer patientId) {
+        logger.info("GET /getNoteList : OK");
+        return noteService.getAllNotesByPatientId(patientId);
+    }
+
+    /**
+     * HTTP GET request for deleting all notes for all patients
      *
      */
     @DeleteMapping("/notes/delete")
@@ -38,12 +50,12 @@ public class NoteController {
     }
 
     /**
-     * Get the ModelAndView note/list
-     * Adds attribute "notes" to the model, containing all notes available in DB for that patient ID
+     * HTTP GET request the ModelAndView note/list
+     * Adds attributes "notes" and notePatientId to the model, containing all notes available in DB for that patient ID
      *
-     * @param patientId the Integer of the patient id chosen
+     * @param patientId the int of the patient id chosen
      * @param model Model Interface, to add attributes to it
-     * @return a string to the address "note/list", returning the associated view
+     * @return a string to the address "note/list" or patient/list, returning the associated view
      * with attribute
      */
     @GetMapping("/note/list/{patientId}")
@@ -60,11 +72,10 @@ public class NoteController {
     }
 
     /**
-     * Get the view note/add with the chosen patient in a model attribute
+     * HTTP GET request to the view note/add with the chosen patient in a model attribute
      * with the associated data of the chosen ID
-     * Add attribute note to the model
      *
-     * @param patientId the Integer of the patient id chosen
+     * @param patientId the int of the patient id chosen
      * @param model the Model Interface, to add attributes to it
      * @return a string to the view "note/add", returning the associated view
      * with attribute (if no Exception)
@@ -86,7 +97,7 @@ public class NoteController {
     }
 
     /**
-     * Add new note to the table notes if BindingResult has no errors
+     * HTTP POST request to add a new note to the table notes if BindingResult has no errors
      * Set the creationDateTime with a current date-time
      * Add Flash Attribute with success message
      *
@@ -95,7 +106,7 @@ public class NoteController {
      * @param patientId the Integer of the patient id chosen
      * @param ra the RedirectAttributes to redirect attributes in redirect
      * @return if successful, a string to the address "patient/list", returning the associated view,
-     * with attributes ; if not, get the "note/add" view
+     * with attributes ; if not, get the "note/add" view ; "redirect:/patient/list if patientId does not exist
      */
     @PostMapping("/note/add/validate/{patientId}")
     public String postNoteAdd(@PathVariable("patientId") int patientId,
@@ -122,13 +133,12 @@ public class NoteController {
     }
 
     /**
-     * DELETE HTTP Request : Delete existing patient from the table patients
+     * DELETE HTTP Request : Delete existing note from the table notes
      * Add Flash Attribute with success message
-     * Add attribute patient to the model, containing all Bids available in DB
      *
-     * @param id the Integer of the patient ID chosen
+     * @param id the String of the ID of the note chosen
      * @param ra the RedirectAttributes to redirect attributes in redirect
-     * @return a string to the address "patient/list", returning the associated view,
+     * @return a string to the address "redirect:/patient/list", returning the associated view,
      * with attributes
      */
     @DeleteMapping("/note/delete/{id}")

@@ -17,7 +17,7 @@ public class PatientController {
     PatientWebClientService patientWebClientService;
 
     /**
-     * Get the ModelAndView patient/list
+     * HTTP GET request to the ModelAndView patient/list
      * Adds attribute "patients" to the model, containing all patients available in DB
      *
      * @param model Model Interface, to add attributes to it

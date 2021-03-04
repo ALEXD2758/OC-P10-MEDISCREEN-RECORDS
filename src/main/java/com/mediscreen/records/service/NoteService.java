@@ -2,16 +2,12 @@ package com.mediscreen.records.service;
 
 import com.mediscreen.records.model.NoteModel;
 import com.mediscreen.records.repository.NoteRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class NoteService {
-
-    private final Logger logger = LoggerFactory.getLogger(NoteService.class);
 
     private final NoteRepository noteRep;
 
@@ -22,6 +18,7 @@ public class NoteService {
     /**
      * Get a list of all notes of a specific patient id
      *
+     * @param patientId int of the patient ID
      * @return list of NoteModel containing all note models
      */
     public List<NoteModel> getAllNotesByPatientId(int patientId) {
@@ -30,7 +27,7 @@ public class NoteService {
 
     /**
      * Check if a note Id exists
-     * @param id the note ID
+     * @param id string of the note ID
      * @return true if note ID already exists, false if note ID doesn't exist
      */
     public boolean checkIdExists(String id) {
