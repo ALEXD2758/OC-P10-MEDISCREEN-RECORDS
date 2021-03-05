@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -119,6 +120,45 @@ public class NoteControllerITTest {
     }
 
     @Test
+    public void getRequestGetNoteListShouldReturnAllNotesOfAPatientId() throws Exception {
+        //1. Setup
+        List<NoteModel> notesList = new ArrayList<>();
+        notesList.add(noteModel1());
+        notesList.add(noteModel3());
+
+        //2. Act
+        doReturn(notesList)
+                .when(noteService)
+                .getAllNotesByPatientId(1);
+
+        MvcResult result = mockMvc.perform(get("/getNoteList")
+                .param("patientId", "1"))
+                //3. Assert
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        assertTrue(result.getResponse().getContentAsString().contains("Diabete Type C"));
+    }
+
+    @Test
+    public void deleteRequestDeleteAllNotesShouldDeleteAllNotes() throws Exception {
+        //1. Setup
+        List<NoteModel> notesList = new ArrayList<>();
+        notesList.add(noteModel1());
+        notesList.add(noteModel3());
+
+        //2. Act
+        doReturn(notesList)
+                .when(noteService)
+                .getAllNotesByPatientId(1);
+
+        MvcResult result = mockMvc.perform(delete("/notes/delete"))
+                //3. Assert
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
+    }
+
+    @Test
     public void getRequestNoteListWithExistentIdShouldReturnNoteListView() throws Exception {
         //1. Setup
         List<NoteModel> notesList = new ArrayList<>();
@@ -140,6 +180,33 @@ public class NoteControllerITTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("note/list"))
                 .andExpect(model().attributeExists("notes"))
+                .andReturn();
+
+        assertTrue(notesList.get(0).getComment().equals("Diabete Type A"));
+        assertTrue(notesList.get(1).getComment().equals("Diabete Type C"));
+    }
+
+    @Test
+    public void getRequestNoteListWithNonExistentIdShouldReturnPatientListView() throws Exception {
+        //1. Setup
+        List<NoteModel> notesList = new ArrayList<>();
+        notesList.add(noteModel1());
+        notesList.add(noteModel3());
+
+        //2. Act
+
+        doReturn(false)
+                .when(patientWebClientService)
+                .checkPatientIdExist(1);
+
+        doReturn(notesList)
+                .when(noteService)
+                .getAllNotesByPatientId(1);
+
+        mockMvc.perform(get("/note/list/{patientId}", "1"))
+                //3. Assert
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/patient/list"))
                 .andReturn();
 
         assertTrue(notesList.get(0).getComment().equals("Diabete Type A"));
@@ -210,6 +277,28 @@ public class NoteControllerITTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/note/list/{patientId}"))
                 .andExpect(flash().attributeExists("successSaveMessage"))
+                .andReturn();
+    }
+
+    @Test
+    public void postRequestPostNoteAddWithNonExistentIdShouldReturnSuccess() throws Exception {
+        //1. Setup
+        noteModel1().setCreationDateTime(LocalDateTime.now());
+        //2. Act
+        doReturn(false)
+                .when(patientWebClientService)
+                .checkPatientIdExist(1);
+
+        mockMvc.perform(post("/note/add/validate/{patientId}", "1")
+                .flashAttr("successSaveMessage", "Your patient was successfully saved")
+                .param("id", "1")
+                .param("patientId", "1")
+                .param("creationDateTime", "2021-02-22T13:45")
+                .param("comment", "Diabete Type A"))
+                //3. Assert
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/patient/list"))
+                .andExpect(flash().attributeExists("ErrorPatientIdMessage"))
                 .andReturn();
     }
 

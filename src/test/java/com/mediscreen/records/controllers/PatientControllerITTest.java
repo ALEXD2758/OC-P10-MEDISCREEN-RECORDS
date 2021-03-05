@@ -68,6 +68,7 @@ public class PatientControllerITTest {
 
     public AddressModel addressModel2() {
         AddressModel addressModel2 = new AddressModel();
+        addressModel2.setId(2);
         addressModel2.setStreet("StreetTest2");
         addressModel2.setCity("CityTest2");
         addressModel2.setPostcode("212345");
@@ -80,6 +81,7 @@ public class PatientControllerITTest {
     public PatientModel patientModel2() {
         LocalDate date = new LocalDate(2019,01,01);
         PatientModel patientModel2 = new PatientModel();
+        patientModel2.setId(2);
         patientModel2.setGivenName("Roger");
         patientModel2.setFamilyName("Patterson");
         patientModel2.setBirthdate(date);
@@ -113,6 +115,16 @@ public class PatientControllerITTest {
         Assert.assertTrue(patientList.get(0).getGivenName().equals("John"));
         Assert.assertTrue(patientList.get(0).getAddress().getStreet().equals("StreetTest1"));
         Assert.assertTrue(patientList.get(1).getGivenName().equals("Roger"));
+        Assert.assertTrue(patientList.get(1).getId().equals(2));
+        Assert.assertTrue(patientList.get(1).getAddress().getId().equals(2));
         Assert.assertTrue(patientList.get(1).getAddress().getStreet().equals("StreetTest2"));
+        Assert.assertTrue(patientList.get(1).getAddress().getPostcode().equals("212345"));
+        Assert.assertTrue(patientList.get(1).getAddress().getCity().equals("CityTest2"));
+        Assert.assertTrue(patientList.get(1).getAddress().getDistrict().equals("DistrictTest2"));
+        Assert.assertTrue(patientList.get(1).getAddress().getState().equals("StateTest2"));
+        Assert.assertTrue(patientList.get(1).getAddress().getCountry().equals("CountryTest2"));
+        Assert.assertTrue(patientList.get(1).getEmailAddress().equals("EmailTest2@email.com"));
+        Assert.assertTrue(patientList.get(1).getPhoneNumber().equals("004678925899"));
+
     }
 }
