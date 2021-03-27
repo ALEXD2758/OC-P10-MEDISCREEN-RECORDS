@@ -58,7 +58,7 @@ public class PatientControllerITTest {
         PatientModel patientModel1 = new PatientModel();
         patientModel1.setGivenName("John");
         patientModel1.setFamilyName("Boyd");
-        patientModel1.setBirthdate(date);
+        patientModel1.setBirthdate(date.toString());
         patientModel1.setGender("MALE");
         patientModel1.setAddress(addressModel1());
         patientModel1.setEmailAddress("EmailTest1@email.com");
@@ -84,7 +84,7 @@ public class PatientControllerITTest {
         patientModel2.setId(2);
         patientModel2.setGivenName("Roger");
         patientModel2.setFamilyName("Patterson");
-        patientModel2.setBirthdate(date);
+        patientModel2.setBirthdate(date.toString());
         patientModel2.setGender("MALE");
         patientModel2.setAddress(addressModel2());
         patientModel2.setEmailAddress("EmailTest2@email.com");
